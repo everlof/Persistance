@@ -23,9 +23,9 @@
 import XCTest
 @testable import Persistance
 
-struct IntContainer: IDable, Comparable, Codable {
+struct IntContainer: Identifiable, Comparable, Codable {
     let int: Int
-    let id: String
+    let identifier: String
 
     public static func == (lhs: IntContainer, rhs: IntContainer) -> Bool {
         return lhs.int == rhs.int
@@ -50,7 +50,7 @@ class PersistedCollectionTests: XCTestCase {
     }
 
     func testSimpleCollection() {
-        let intContainer = IntContainer(int: 1, id: "1")
+        let intContainer = IntContainer(int: 1, identifier: "1")
         try! storage.persist(intContainer)
 
         let collection = try! PersistedCollection<IntContainer>(storage: storage)

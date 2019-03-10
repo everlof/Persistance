@@ -23,6 +23,15 @@
 import XCTest
 @testable import Persistance
 
+struct Person: Identifiable, Codable {
+    let name: String
+    let socialSecurityNumber: String
+
+    var identifier: String {
+        return socialSecurityNumber
+    }
+}
+
 class StorageTests: XCTestCase {
 
     override func setUp() {
@@ -31,35 +40,35 @@ class StorageTests: XCTestCase {
 
     override func tearDown() {
         super.tearDown()
-        try! Storage().delete()
+        try! Storage().deleteAll()
     }
 
     func testStoragePersist() {
         let storage = try! Storage()
-        let design = Design(uuid: UUID())
-        try! storage.persist(design)
+        let person = Person(name: "Nils", socialSecurityNumber: "19800909-1312")
+        try! storage.persist(person)
     }
 
     func testStorageLoadError() {
         let storage = try! Storage()
-        XCTAssertThrowsError(try storage.load(id: "invalid-id") as Design, "Throw incorrect") { error in
+        XCTAssertThrowsError(try storage.load(id: "invalid-id") as Person, "Throw incorrect") { error in
             XCTAssertEqual(error as! Storage.Error, Storage.Error.noFile)
         }
     }
 
     func testStorageLoad() {
         let storage = try! Storage()
-        let d  = Design(uuid: UUID())
-        try! storage.persist(d)
-        let loaded = try! storage.load(id: d.uuid.uuidString) as Design
+        let person  = Person(name: "Nils", socialSecurityNumber: "19800909-1312")
+        try! storage.persist(person)
+        let loaded = try! storage.load(id: person.identifier) as Person
 
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         let str1 = String(data: try! encoder.encode(loaded), encoding: .utf8)!
-        let str2 = String(data: try! encoder.encode(d), encoding: .utf8)!
+        let str2 = String(data: try! encoder.encode(person), encoding: .utf8)!
         XCTAssertEqual(str1, str2)
 
-        let m = Mirror(reflecting: d)
+        let m = Mirror(reflecting: person)
 
         for n in m.children {
             print(n)
