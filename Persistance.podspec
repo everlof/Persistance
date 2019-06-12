@@ -28,7 +28,7 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'git@github.com:everlof/Persistance.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/deverlof'
   
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'Persistance/**/*.swift'
   

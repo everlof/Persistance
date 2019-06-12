@@ -59,7 +59,7 @@ public class Storage {
 
 
     internal func directory<T : Storagable>(for storagableType: T.Type) throws -> URL {
-        let typeName = String(describing: storagableType).localizedLowercase
+        let typeName = String(describing: storagableType).lowercased()
         return base.appendingPathComponent(typeName)
     }
 
